@@ -4,6 +4,15 @@ import java.nio.file.*;
 import java.util.*;
 
 public class StringBuilderGenerator {
+    private static String antiRipetizioni (List<String> lista, List<Integer> indici, int[] index) {
+        if (index[0] >= indici.size()) {
+            Collections.shuffle(indici);
+            index[0] = 0;
+        }
+        
+        return lista.get(indici.get(index[0]++));
+    }
+
     public static void main(String[] args) {
         final int NUMFrasi = 5000;
 
@@ -37,10 +46,49 @@ public class StringBuilderGenerator {
 
             sb.append("Titolo: Indagine confusa nei pressi di San Severo");
             
-            Random random = new Random();
             int counterRighe = 0;
             int counterCDS = 0;
             int capitolo = 1;
+
+            List<Integer> antiRipetizioneIncipit = new ArrayList<>();
+            int[] indexIncipit = {0};
+
+            for (int i = 0; i < stringIncipit.size(); i++) {
+                antiRipetizioneIncipit.add(i);
+            }
+            Collections.shuffle(antiRipetizioneIncipit);
+
+            List<Integer> antiRipetizioneFrasi = new ArrayList<>();
+            int[] indexFrasi = {0};
+
+            for (int i = 0; i < stringFrasi.size(); i++) {
+                antiRipetizioneFrasi.add(i);
+            }
+            Collections.shuffle(antiRipetizioneFrasi);
+
+            List<Integer> antiRipetizioneColpiDiScena = new ArrayList<>();
+            int[] indexColpiDiScena = {0};
+
+            for (int i = 0; i < stringColpiDiScena.size(); i++) {
+                antiRipetizioneColpiDiScena.add(i);
+            }
+            Collections.shuffle(antiRipetizioneColpiDiScena);
+            
+            List<Integer> antiRipetizioneFinali = new ArrayList<>();
+            int[] indexFinali = {0};
+
+            for (int i = 0; i < stringFinali.size(); i++) {
+                antiRipetizioneFinali.add(i);
+            }
+            Collections.shuffle(antiRipetizioneFinali);
+
+            List<Integer> antiRipetizioneCongiunzioni = new ArrayList<>();
+            int[] indexCongiunzioni = {0};
+
+            for (int i = 0; i < stringCongiunzioni.size(); i++) {
+                antiRipetizioneCongiunzioni.add(i);
+            }
+            Collections.shuffle(antiRipetizioneCongiunzioni);
 
             for (int i = 0; i < NUMFrasi; i++) {
                 sb.append(System.lineSeparator());
@@ -48,14 +96,16 @@ public class StringBuilderGenerator {
                     sb.append(System.lineSeparator());
                     sb.append("Capitolo ").append(capitolo);
                     sb.append(System.lineSeparator());
-                    sb.append(stringIncipit.get(random.nextInt(stringIncipit.size())));
+                    sb.append(antiRipetizioni(stringIncipit, antiRipetizioneIncipit, indexIncipit));
                 } else {
-                    sb.append(stringCongiunzioni.get(random.nextInt(stringCongiunzioni.size())));
+
+                    sb.append(antiRipetizioni(stringCongiunzioni, antiRipetizioneCongiunzioni, indexCongiunzioni));
+
                     if (counterCDS != 10) {
-                        sb.append(" ").append(stringFrasi.get(random.nextInt(stringFrasi.size())));
+                        sb.append(" ").append(antiRipetizioni(stringFrasi, antiRipetizioneFrasi, indexFrasi));
                         counterCDS++;
                     } else {
-                        sb.append(" ").append(stringColpiDiScena.get(random.nextInt(stringColpiDiScena.size())));
+                        sb.append(" ").append(antiRipetizioni(stringColpiDiScena, antiRipetizioneColpiDiScena, indexColpiDiScena));
                         counterCDS = 0;
                     }
                 }
@@ -63,7 +113,7 @@ public class StringBuilderGenerator {
                 
                 if (counterRighe == 1667) { 
                     sb.append(System.lineSeparator());
-                    sb.append(stringFinali.get(random.nextInt(stringFinali.size())));
+                    sb.append(antiRipetizioni(stringFinali, antiRipetizioneFinali, indexFinali));
                     counterRighe = 0; 
                     capitolo++;
                 }
