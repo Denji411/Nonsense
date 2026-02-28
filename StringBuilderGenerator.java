@@ -3,7 +3,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-public class StringGenerator {
+public class StringBuilderGenerator {
     public static void main(String[] args) {
         final int NUMFrasi = 5000;
 
@@ -32,8 +32,10 @@ public class StringGenerator {
 
         long start = System.currentTimeMillis();
 
-        try (BufferedWriter bw = Files.newBufferedWriter(pathRomanzo)) {
-            bw.write("Titolo: Indagine confusa nei pressi di San Severo");
+        try {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("Titolo: Indagine confusa nei pressi di San Severo");
             
             Random random = new Random();
             int counterRighe = 0;
@@ -41,31 +43,34 @@ public class StringGenerator {
             int capitolo = 1;
 
             for (int i = 0; i < NUMFrasi; i++) {
-                bw.newLine();
+                sb.append(System.lineSeparator());
                 if (counterRighe == 0) {
-                    bw.newLine();
-                    bw.write("Capitolo " + capitolo);
-                    bw.newLine();
-                    bw.write(stringIncipit.get(random.nextInt(stringIncipit.size())));
+                    sb.append(System.lineSeparator());
+                    sb.append("Capitolo ").append(capitolo);
+                    sb.append(System.lineSeparator());
+                    sb.append(stringIncipit.get(random.nextInt(stringIncipit.size())));
                 } else {
-                    bw.write(stringCongiunzioni.get(random.nextInt(stringCongiunzioni.size())));
+                    sb.append(stringCongiunzioni.get(random.nextInt(stringCongiunzioni.size())));
                     if (counterCDS != 10) {
-                        bw.write(" " + stringFrasi.get(random.nextInt(stringFrasi.size())));
+                        sb.append(" ").append(stringFrasi.get(random.nextInt(stringFrasi.size())));
                         counterCDS++;
                     } else {
-                        bw.write(" " + stringColpiDiScena.get(random.nextInt(stringColpiDiScena.size())));
+                        sb.append(" ").append(stringColpiDiScena.get(random.nextInt(stringColpiDiScena.size())));
                         counterCDS = 0;
                     }
                 }
                 counterRighe++;
                 
                 if (counterRighe == 1667) { 
-                    bw.newLine();
-                    bw.write(stringFinali.get(random.nextInt(stringFinali.size())));
+                    sb.append(System.lineSeparator());
+                    sb.append(stringFinali.get(random.nextInt(stringFinali.size())));
                     counterRighe = 0; 
                     capitolo++;
                 }
             }
+
+            Files.writeString(pathRomanzo, sb.toString());
+
         } catch (IOException e) {
             System.err.println("Problema nella lettura del file: " + e.getMessage());
         }
